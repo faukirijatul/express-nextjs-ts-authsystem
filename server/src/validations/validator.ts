@@ -49,7 +49,7 @@ export const commonValidations = {
       "Password must contain at least one uppercase letter, one lowercase letter, and one number"
     ),
   name: z.string().min(2, "Name must be at least 2 characters long"),
-  picture: z.string().min(2, "Picture must be at least 2 characters long"),
+  picture: z.string().url("Picture must be a valid URL"),
   pagination: {
     page: z.coerce.number().int().positive().default(1),
     limit: z.coerce.number().int().positive().default(10),
