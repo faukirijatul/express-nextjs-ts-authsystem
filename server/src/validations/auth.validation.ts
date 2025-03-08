@@ -32,6 +32,7 @@ export const googleLoginSchema = {
   body: z.object({
     email: commonValidations.email,
     name: commonValidations.name,
+    picture: commonValidations.picture,
   }),
 };
 

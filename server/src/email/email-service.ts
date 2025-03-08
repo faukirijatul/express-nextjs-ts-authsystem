@@ -14,6 +14,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// Verify Email In Register
 const verificationEmailTemplate = fs.readFileSync(
   "./src/email/templates/verify-email.html",
   "utf-8"
@@ -34,7 +35,7 @@ export const sendVerificationEmail = async (
     });
 
     const mailOptions: EmailData = {
-      from: "no-reply@example.com",
+      from: process.env.SMTP_MAIL || "",
       to: user.email,
       subject: "Verify Your Email Address",
       html: htmlContent,
@@ -47,44 +48,108 @@ export const sendVerificationEmail = async (
   }
 };
 
-// const renderTemplate = (templateContent: string, data: any): string => {
-//   return mustache.render(templateContent, data);
-// };
+// Verify Email in Update Profile
+const verificationNewEmailTemplate = fs.readFileSync(
+  "./src/email/templates/verify-new-email.html",
+  "utf-8"
+);
 
-// export const sendEmail = async (options: EmailData): Promise<void> => {
-//   try {
-//     const transporter = createTransporter();
-//     await transporter.sendMail({
-//       from: `"${process.env.EMAIL_FROM_NAME}" <${process.env.EMAIL_FROM_ADDRESS}>`,
-//       to: options.to,
-//       subject: options.subject,
-//       html: options.html,
-//     });
-//     console.log("Email sent successfully");
-//   } catch (error) {
-//     console.error("Error sending email:", error);
-//     throw new Error("Failed to send email");
-//   }
-// };
+export const sendVerificationNewEmail = async (
+  user: { name: string; email: string; id: string },
+  token: string,
+  email: string
+): Promise<void> => {
+  try {
+    const verificationLink = `${process.env.CLIENT_URL}/activate-account?token=${token}`;
 
-// export const sendVerificationEmail = async (
-//   user: { name: string; email: string; id: string },
-//   token: string
-// ): Promise<void> => {
-//   const verificationLink = `${process.env.FRONTEND_URL}/activate-account?token=${token}`;
+    const htmlContent = mustache.render(verificationNewEmailTemplate, {
+      name: user.name,
+      verificationLink,
+      appName: process.env.APP_NAME || "Our Application",
+      currentYear: new Date().getFullYear(),
+    });
 
-//   const htmlContent = renderTemplate(verificationEmailTemplate, {
-//     name: user.name,
-//     verificationLink,
-//     appName: process.env.APP_NAME || "Our Application",
-//     currentYear: new Date().getFullYear(),
-//   });
+    const mailOptions: EmailData = {
+      from: process.env.SMTP_MAIL || "",
+      to: email,
+      subject: "Verify Your New Email Address",
+      html: htmlContent,
+    };
 
-//   const mailOptions: EmailData = {
-//     to: user.email,
-//     subject: "Verify Your Email Address",
-//     html: htmlContent,
-//   };
+    await transporter.sendMail(mailOptions);
+  } catch (error) {
+    console.error("Error sending email:", error);
+    throw new Error("Failed to send email");
+  }
+};
 
-//   await sendEmail(mailOptions);
-// };
+// Change Password Verify
+const verificationChangePasswordEmailTemplate = fs.readFileSync(
+  "./src/email/templates/verify-new-password.html",
+  "utf-8"
+);
+
+export const sendVerificationChangePasswordEmail = async (
+  user: { name: string; email: string; id: string },
+  token: string
+): Promise<void> => {
+  try {
+    const verificationLink = `${process.env.CLIENT_URL}/activate-account?token=${token}`;
+
+    const htmlContent = mustache.render(verificationNewEmailTemplate, {
+      name: user.name,
+      verificationLink,
+      appName: process.env.APP_NAME || "Our Application",
+      currentYear: new Date().getFullYear(),
+    });
+
+    const mailOptions: EmailData = {
+      from: process.env.SMTP_MAIL || "",
+      to: user.email,
+      subject: "Verify Your New Password",
+      html: htmlContent,
+    };
+
+    await transporter.sendMail(mailOptions);
+  } catch (error) {
+    console.error("Error sending email:", error);
+    throw new Error("Failed to send email");
+  }
+};
+
+// Reset Password Verify
+const verificationResetPasswordEmailTemplate = fs.readFileSync(
+  "./src/email/templates/verify-reset-password.html",
+  "utf-8"
+);
+
+export const sendVerificationResetPasswordEmail = async (
+  user: { name: string; email: string; id: string },
+  token: string
+): Promise<void> => {
+  try {
+    const verificationLink = `${process.env.CLIENT_URL}/reset-password?token=${token}`;
+
+    const htmlContent = mustache.render(
+      verificationResetPasswordEmailTemplate,
+      {
+        name: user.name,
+        verificationLink,
+        appName: process.env.APP_NAME || "Our Application",
+        currentYear: new Date().getFullYear(),
+      }
+    );
+
+    const mailOptions: EmailData = {
+      from: process.env.SMTP_MAIL || "",
+      to: user.email,
+      subject: "Verify Your Reset Password Request",
+      html: htmlContent,
+    };
+
+    await transporter.sendMail(mailOptions);
+  } catch (error) {
+    console.error("Error sending email:", error);
+    throw new Error("Failed to send email");
+  }
+};

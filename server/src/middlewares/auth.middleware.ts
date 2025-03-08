@@ -4,23 +4,6 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import { prismaClient } from "../config/prisma-client";
 import { setCookie } from "../services/cookie.service";
 
-// Extend the Request type to include user
-declare global {
-  namespace Express {
-    interface Request {
-      user?: {
-        id: string;
-        name: string;
-        email: string;
-        role: string;
-        is_active: boolean;
-        createdAt: Date;
-        updatedAt: Date;
-      };
-    }
-  }
-}
-
 export const authenticateUser = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const accessToken = req.cookies.accessToken;
@@ -47,6 +30,13 @@ export const authenticateUser = asyncHandler(
             name: true,
             email: true,
             role: true,
+            image: {
+              select: {
+                id: true,
+                url: true,
+                public_id: true,
+              },
+            },
             is_active: true,
             createdAt: true,
             updatedAt: true,
@@ -80,6 +70,13 @@ export const authenticateUser = asyncHandler(
             name: true,
             email: true,
             role: true,
+            image: {
+              select: {
+                id: true,
+                url: true,
+                public_id: true,
+              },
+            },
             is_active: true,
             createdAt: true,
             updatedAt: true,
@@ -116,7 +113,6 @@ export const authenticateUser = asyncHandler(
       }
     }
 
-    // Should not reach here, but for safety
     throw new AuthenticationError("Authentication failed");
   }
 );

@@ -19,14 +19,25 @@ enum Role {
 }
 
 model User {
-  id String @id @default(uuid())
-  name String
-  email String @unique
-  password String?
+  id String @id @default(uuid()) @db.VarChar(100)
+  name String @db.VarChar(100)
+  email String @unique @db.VarChar(100)
+  password String? @db.VarChar(100)
+  image Image?
   role Role @default(USER)
   is_active Boolean @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("users")
+}
+
+model Image {
+  id String @id @default(uuid()) @db.VarChar(100)
+  url String @db.VarChar(100)
+  public_id String? @db.VarChar(100)
+  user_id String @unique @db.VarChar(100)
+  user User @relation(fields: [user_id], references: [id])
+
+  @@map("images")
 }
