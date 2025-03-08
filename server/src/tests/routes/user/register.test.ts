@@ -19,7 +19,7 @@ jest.mock("../../../email/email-service.ts", () => ({
   sendVerificationEmail: jest.fn(),
 }));
 
-describe("User Registration API", () => {
+describe("POST /api/user/register", () => {
   const mockUser = {
     id: "user-123",
     name: "Test User",

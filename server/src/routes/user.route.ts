@@ -7,7 +7,7 @@ import {
   registerSchema,
   resendTokenSchema,
   verifyEmailSchema,
-} from "../validations/user-auth.validation";
+} from "../validations/user.validation";
 import { authenticateUser } from "../middlewares/auth.middleware";
 import multer from "multer";
 
