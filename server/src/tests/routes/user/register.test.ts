@@ -19,7 +19,7 @@ jest.mock("../../../email/email-service.ts", () => ({
   sendVerificationEmail: jest.fn(),
 }));
 
-describe("POST /api/user/register", () => {
+describe("POST /api/users/register", () => {
   const mockUser = {
     id: "user-123",
     name: "Test User",
@@ -46,7 +46,7 @@ describe("POST /api/user/register", () => {
 
   // 1
   it("should register a new user successfully", async () => {
-    const response = await request(app).post("/api/user/register").send({
+    const response = await request(app).post("/api/users/register").send({
       name: mockUser.name,
       email: mockUser.email,
       password: mockUser.password,
@@ -104,7 +104,7 @@ describe("POST /api/user/register", () => {
   it("should return 409 if email already exists", async () => {
     (prismaClient.user.findUnique as jest.Mock).mockResolvedValue(mockUser);
 
-    const response = await request(app).post("/api/user/register").send({
+    const response = await request(app).post("/api/users/register").send({
       name: mockUser.name,
       email: mockUser.email,
       password: mockUser.password,
@@ -122,7 +122,7 @@ describe("POST /api/user/register", () => {
 
   // 3
   it("should return 400 if email format is invalid", async () => {
-    const response = await request(app).post("/api/user/register").send({
+    const response = await request(app).post("/api/users/register").send({
       name: mockUser.name,
       email: "invalid-email",
       password: mockUser.password,
@@ -138,7 +138,7 @@ describe("POST /api/user/register", () => {
 
   // 4
   it("should return 400 if password does not meet requirements", async () => {
-    const response = await request(app).post("/api/user/register").send({
+    const response = await request(app).post("/api/users/register").send({
       name: mockUser.name,
       email: mockUser.email,
       password: "weak",
@@ -154,7 +154,7 @@ describe("POST /api/user/register", () => {
 
   // 5
   it("should return 400 if required fields are missing", async () => {
-    const response = await request(app).post("/api/user/register").send({
+    const response = await request(app).post("/api/users/register").send({
       name: mockUser.name,
       // Missing email and password
     });
@@ -171,7 +171,7 @@ describe("POST /api/user/register", () => {
       new Error("Failed to send email")
     );
 
-    const response = await request(app).post("/api/user/register").send({
+    const response = await request(app).post("/api/users/register").send({
       name: mockUser.name,
       email: mockUser.email,
       password: mockUser.password,

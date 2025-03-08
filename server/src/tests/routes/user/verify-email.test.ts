@@ -13,7 +13,7 @@ jest.mock("../../../config/prisma-client", () => ({
   },
 }));
 
-describe("POST /api/user/verify-email", () => {
+describe("POST /api/users/verify-email", () => {
   const mockUser = {
     id: "user-123",
     name: "Test User",
@@ -43,7 +43,7 @@ describe("POST /api/user/verify-email", () => {
   // 1
   it("should verify email successfully", async () => {
     const response = await request(app)
-      .post("/api/user/verify-email")
+      .post("/api/users/verify-email")
       .send({ token: mockToken });
 
     expect(response.status).toBe(200);
@@ -74,7 +74,9 @@ describe("POST /api/user/verify-email", () => {
 
   // 2
   it("should return 400 if token is missing", async () => {
-    const response = await request(app).post("/api/user/verify-email").send({});
+    const response = await request(app)
+      .post("/api/users/verify-email")
+      .send({});
 
     expect(response.status).toBe(400);
     expect(response.body.success).toBe(false);
@@ -92,7 +94,7 @@ describe("POST /api/user/verify-email", () => {
     });
 
     const response = await request(app)
-      .post("/api/user/verify-email")
+      .post("/api/users/verify-email")
       .send({ token: "invalid token" });
 
     expect(response.status).toBe(500);
@@ -110,7 +112,7 @@ describe("POST /api/user/verify-email", () => {
     });
 
     const response = await request(app)
-      .post("/api/user/verify-email")
+      .post("/api/users/verify-email")
       .send({ token: "expired-token" });
 
     // Assertions
@@ -129,7 +131,7 @@ describe("POST /api/user/verify-email", () => {
     (prismaClient.user.findUnique as jest.Mock).mockResolvedValue(null);
 
     const response = await request(app)
-      .post("/api/user/verify-email")
+      .post("/api/users/verify-email")
       .send({ token: mockToken });
 
     // Assertions
@@ -145,13 +147,12 @@ describe("POST /api/user/verify-email", () => {
 
   // 6
   it("should handle database errors during update", async () => {
-    // Mock database error during update
     (prismaClient.user.update as jest.Mock).mockRejectedValue(
       new Error("Database error")
     );
 
     const response = await request(app)
-      .post("/api/user/verify-email")
+      .post("/api/users/verify-email")
       .send({ token: mockToken });
 
     // Assertions

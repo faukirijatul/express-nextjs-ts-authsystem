@@ -16,7 +16,7 @@ jest.mock("../../../email/email-service.ts", () => ({
   sendVerificationEmail: jest.fn(),
 }));
 
-describe("POST /api/user/resend-token", () => {
+describe("POST /api/users/resend-token", () => {
   const mockUser = {
     id: "user-123",
     name: "Test User",
@@ -35,7 +35,7 @@ describe("POST /api/user/resend-token", () => {
 
   // 1
   it("should resend verification token", async () => {
-    const response = await request(app).post("/api/user/resend-token").send({
+    const response = await request(app).post("/api/users/resend-token").send({
       email: mockUser.email,
     });
 
@@ -69,7 +69,7 @@ describe("POST /api/user/resend-token", () => {
     (prismaClient.user.findUnique as jest.Mock).mockResolvedValue(null);
 
     const response = await request(app)
-      .post("/api/user/resend-token")
+      .post("/api/users/resend-token")
       .send({ email: "nonexistent@example.com" });
 
     // Assertions
@@ -86,7 +86,7 @@ describe("POST /api/user/resend-token", () => {
   // 3
   it("should return 400 if email format is invalid", async () => {
     const response = await request(app)
-      .post("/api/user/resend-token")
+      .post("/api/users/resend-token")
       .send({ email: "invalid-email" });
 
     // Assertions
@@ -100,7 +100,9 @@ describe("POST /api/user/resend-token", () => {
 
   // 4
   it("should return 400 if email is missing", async () => {
-    const response = await request(app).post("/api/user/resend-token").send({});
+    const response = await request(app)
+      .post("/api/users/resend-token")
+      .send({});
 
     // Assertions
     expect(response.status).toBe(400);
@@ -116,7 +118,7 @@ describe("POST /api/user/resend-token", () => {
     );
 
     const response = await request(app)
-      .post("/api/user/resend-token")
+      .post("/api/users/resend-token")
       .send({ email: mockUser.email });
 
     // Assertions
@@ -136,7 +138,7 @@ describe("POST /api/user/resend-token", () => {
     });
 
     const response = await request(app)
-      .post("/api/user/resend-token")
+      .post("/api/users/resend-token")
       .send({ email: mockUser.email });
 
     // Assertions

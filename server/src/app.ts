@@ -27,7 +27,7 @@ app.get("/test", (req: Request, res: Response) => {
   });
 });
 
-app.use("/api/user", userRoutes);
+app.use("/api/users", userRoutes);
 
 app.use(errorHandler);
 

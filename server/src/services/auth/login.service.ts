@@ -52,7 +52,7 @@ export const loginService = async (
   return { user: { ...user, password: null } };
 };
 
-// Google Login Service
+//2. Google Login Service
 export const googleLoginService = async (
   res: Response,
   name: string,
