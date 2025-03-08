@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { commonValidations } from "../utils/validator";
+import { commonValidations } from "./validator";
 
 export const registerSchema = {
   body: z.object({

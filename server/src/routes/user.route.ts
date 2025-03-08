@@ -1,13 +1,13 @@
 import { Router } from "express";
-import * as userAuthController from "../controllers/auth.controller";
-import { validateRequest } from "../utils/validator";
+import * as userAuthController from "../controllers/user.controller";
+import { validateRequest } from "../validations/validator";
 import {
   loginSchema,
   googleLoginSchema,
   registerSchema,
   resendTokenSchema,
   verifyEmailSchema,
-} from "../validations/auth.validation";
+} from "../validations/user-auth.validation";
 import { authenticateUser } from "../middlewares/auth.middleware";
 import multer from "multer";
 
@@ -15,57 +15,50 @@ const upload = multer({
   storage: multer.memoryStorage(),
 });
 
-const authRoutes: Router = Router();
+const route: Router = Router();
 
-authRoutes.post(
+route.post(
   "/register",
   validateRequest(registerSchema),
   userAuthController.register
 );
-authRoutes.post(
+route.post(
   "/resend-token",
   validateRequest(resendTokenSchema),
   userAuthController.resendToken
 );
-authRoutes.post(
+route.post(
   "/verify-email",
   validateRequest(verifyEmailSchema),
   userAuthController.verifyEmail
 );
-authRoutes.post(
-  "/login",
-  validateRequest(loginSchema),
-  userAuthController.login
-);
-authRoutes.post(
+route.post("/login", validateRequest(loginSchema), userAuthController.login);
+route.post(
   "/google-login",
   validateRequest(googleLoginSchema),
   userAuthController.googleLogin
 );
-authRoutes.get("/me", authenticateUser, userAuthController.loggedInUser);
-authRoutes.patch(
+route.get("/me", authenticateUser, userAuthController.loggedInUser);
+route.patch(
   "/update-user",
   authenticateUser,
   upload.single("image"),
   userAuthController.updateUser
 );
-authRoutes.post("/verify-new-email", userAuthController.verifyNewEmail);
-authRoutes.post(
+route.post("/verify-new-email", userAuthController.verifyNewEmail);
+route.post(
   "/update-password",
   authenticateUser,
   userAuthController.updatePassword
 );
-authRoutes.post("/verify-new-password", userAuthController.verifyNewPassword);
-authRoutes.post("/forgot-password", userAuthController.forgotPassword);
-authRoutes.post(
-  "/reset-password-verify",
-  userAuthController.resetPasswordVerify
-);
-authRoutes.delete("/logout", authenticateUser, userAuthController.logout);
-authRoutes.delete(
+route.post("/verify-new-password", userAuthController.verifyNewPassword);
+route.post("/forgot-password", userAuthController.forgotPassword);
+route.post("/reset-password-verify", userAuthController.resetPasswordVerify);
+route.delete("/logout", authenticateUser, userAuthController.logout);
+route.delete(
   "/delete-account",
   authenticateUser,
   userAuthController.deleteAccount
 );
 
-export default authRoutes;
+export default route;

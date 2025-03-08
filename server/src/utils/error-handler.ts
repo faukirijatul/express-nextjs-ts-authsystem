@@ -8,6 +8,7 @@ export enum ErrorType {
   NOT_FOUND = "NOT_FOUND_ERROR",
   CONFLICT = "CONFLICT_ERROR",
   SERVER = "SERVER_ERROR",
+  UNKNOWN = "UNKNOWN_ERROR",
 }
 
 // Base error class
