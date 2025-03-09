@@ -36,6 +36,60 @@ export const googleLoginSchema = {
   }),
 };
 
+export const updateProfileSchema = {
+  body: z.object({
+    email: commonValidations.email,
+    name: commonValidations.name,
+  }),
+  file: z
+    .custom((file) => {
+      if (!file) return true;
+
+      if (!file.mimeType.startsWith("/image")) {
+        throw new Error("File must be an image");
+      }
+
+      if (file.size > 5 * 1024 * 1024) {
+        throw new Error("Image size must be less than 5mb");
+      }
+
+      return true;
+    })
+    .optional(),
+};
+
+export const verifyNewEmailSchema = {
+  body: z.object({
+    token: z.string().min(1, "Token is required"),
+  }),
+};
+
+export const updatePasswordSchema = {
+  body: z.object({
+    password: commonValidations.password,
+    newPassword: commonValidations.password,
+  }),
+};
+
+export const verifyNewPasswordSchema = {
+  body: z.object({
+    token: z.string().min(1, "Token is required"),
+  }),
+};
+
+export const forgotPasswordSchema = {
+  body: z.object({
+    email: commonValidations.email,
+  }),
+};
+
+export const resetPasswordVerifySchema = {
+  body: z.object({
+    token: z.string().min(1, "Token is required"),
+    newPassword: commonValidations.password,
+  }),
+};
+
 export const deleteAccountSchema = {
   params: z.object({
     id: commonValidations.id.optional(),

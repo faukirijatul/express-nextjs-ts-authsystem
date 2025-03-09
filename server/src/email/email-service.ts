@@ -14,7 +14,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Verify Email In Register
+// 1. Verify Email In Register
 const verificationEmailTemplate = fs.readFileSync(
   "./src/email/templates/verify-email.html",
   "utf-8"
@@ -48,7 +48,7 @@ export const sendVerificationEmail = async (
   }
 };
 
-// Verify Email in Update Profile
+// 2. Verify Email in Update Profile
 const verificationNewEmailTemplate = fs.readFileSync(
   "./src/email/templates/verify-new-email.html",
   "utf-8"
@@ -83,7 +83,7 @@ export const sendVerificationNewEmail = async (
   }
 };
 
-// Change Password Verify
+// 3. Change Password Verify
 const verificationChangePasswordEmailTemplate = fs.readFileSync(
   "./src/email/templates/verify-new-password.html",
   "utf-8"
@@ -96,12 +96,15 @@ export const sendVerificationChangePasswordEmail = async (
   try {
     const verificationLink = `${process.env.CLIENT_URL}/activate-account?token=${token}`;
 
-    const htmlContent = mustache.render(verificationNewEmailTemplate, {
-      name: user.name,
-      verificationLink,
-      appName: process.env.APP_NAME || "Our Application",
-      currentYear: new Date().getFullYear(),
-    });
+    const htmlContent = mustache.render(
+      verificationChangePasswordEmailTemplate,
+      {
+        name: user.name,
+        verificationLink,
+        appName: process.env.APP_NAME || "Our Application",
+        currentYear: new Date().getFullYear(),
+      }
+    );
 
     const mailOptions: EmailData = {
       from: process.env.SMTP_MAIL || "",
@@ -117,7 +120,7 @@ export const sendVerificationChangePasswordEmail = async (
   }
 };
 
-// Reset Password Verify
+// 4. Reset Password Verify
 const verificationResetPasswordEmailTemplate = fs.readFileSync(
   "./src/email/templates/verify-reset-password.html",
   "utf-8"
