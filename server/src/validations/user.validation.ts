@@ -38,8 +38,8 @@ export const googleLoginSchema = {
 
 export const updateProfileSchema = {
   body: z.object({
-    email: commonValidations.email,
-    name: commonValidations.name,
+    email: commonValidations.email.optional(),
+    name: commonValidations.name.optional(),
   }),
   file: z
     .custom((file) => {
