@@ -1,19 +1,7 @@
 import { Router } from "express";
 import * as userAuthController from "../controllers/user.controller";
 import { validateRequest } from "../validations/validator";
-import {
-  loginSchema,
-  googleLoginSchema,
-  registerSchema,
-  resendTokenSchema,
-  verifyEmailSchema,
-  updateProfileSchema,
-  updatePasswordSchema,
-  forgotPasswordSchema,
-  verifyNewEmailSchema,
-  verifyNewPasswordSchema,
-  resetPasswordVerifySchema,
-} from "../validations/user.validation";
+import * as validation from "../validations/user.validation";
 import { authenticateUser } from "../middlewares/auth.middleware";
 import multer from "multer";
 
@@ -26,31 +14,35 @@ const route: Router = Router();
 // 1
 route.post(
   "/register",
-  validateRequest(registerSchema),
+  validateRequest(validation.registerSchema),
   userAuthController.register
 );
 
 // 2
 route.post(
   "/resend-token",
-  validateRequest(resendTokenSchema),
+  validateRequest(validation.resendTokenSchema),
   userAuthController.resendToken
 );
 
 // 3
 route.post(
   "/verify-email",
-  validateRequest(verifyEmailSchema),
+  validateRequest(validation.verifyEmailSchema),
   userAuthController.verifyEmail
 );
 
 // 4
-route.post("/login", validateRequest(loginSchema), userAuthController.login);
+route.post(
+  "/login",
+  validateRequest(validation.loginSchema),
+  userAuthController.login
+);
 
 // 5
 route.post(
   "/google-login",
-  validateRequest(googleLoginSchema),
+  validateRequest(validation.googleLoginSchema),
   userAuthController.googleLogin
 );
 
@@ -61,7 +53,7 @@ route.get("/me", authenticateUser, userAuthController.loggedInUser);
 route.patch(
   "/update-user",
   authenticateUser,
-  validateRequest(updateProfileSchema),
+  validateRequest(validation.updateProfileSchema),
   upload.single("image"),
   userAuthController.updateUser
 );
@@ -69,7 +61,7 @@ route.patch(
 // 8
 route.post(
   "/verify-new-email",
-  validateRequest(verifyNewEmailSchema),
+  validateRequest(validation.verifyNewEmailSchema),
   userAuthController.verifyNewEmail
 );
 
@@ -77,28 +69,28 @@ route.post(
 route.post(
   "/update-password",
   authenticateUser,
-  validateRequest(updatePasswordSchema),
+  validateRequest(validation.updatePasswordSchema),
   userAuthController.updatePassword
 );
 
 // 10
 route.post(
   "/verify-new-password",
-  validateRequest(verifyNewPasswordSchema),
+  validateRequest(validation.verifyNewPasswordSchema),
   userAuthController.verifyNewPassword
 );
 
 // 11
 route.post(
   "/forgot-password",
-  validateRequest(forgotPasswordSchema),
+  validateRequest(validation.forgotPasswordSchema),
   userAuthController.forgotPassword
 );
 
 // 12
 route.post(
   "/reset-password-verify",
-  validateRequest(resetPasswordVerifySchema),
+  validateRequest(validation.resetPasswordVerifySchema),
   userAuthController.resetPasswordVerify
 );
 

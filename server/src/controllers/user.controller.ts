@@ -30,6 +30,12 @@ export const resendToken = asyncHandler(
   async (req: Request, res: Response): Promise<any> => {
     const { email } = req.body;
 
+    console.log(email);
+
+    if (!email) {
+      throw new AuthenticationError("Email is required");
+    }
+
     const { user } = await registrationService.resendVerificationTokenService(
       email
     );
