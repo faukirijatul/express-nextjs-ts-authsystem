@@ -5,11 +5,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { registerUser } from "@/lib/store/features/auth/auth-slice";
+import {
+  closeVerificationModal,
+  registerUser,
+} from "@/lib/store/features/auth/auth-slice";
 import { useEffect } from "react";
 import { toast } from "sonner";
-import { VerificationModal } from "./verification-modal";
 import { Loader2 } from "lucide-react";
+import { EmailSentModal } from "./email-sent-modal";
 
 // Validation schema matching the backend requirements
 const registerSchema = z.object({
@@ -28,7 +31,9 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export function RegisterForm() {
   const dispatch = useAppDispatch();
-  const { isLoading, error } = useAppSelector((state) => state.auth);
+  const { isLoading, error, user, isVerificationModalOpen } = useAppSelector(
+    (state) => state.auth
+  );
 
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
@@ -176,7 +181,15 @@ export function RegisterForm() {
           </div>
         </div>
       </div>
-      <VerificationModal />
+
+      <EmailSentModal
+        isOpen={isVerificationModalOpen}
+        onClose={() => dispatch(closeVerificationModal())}
+        title="Email Verification Required"
+        email={user?.email}
+        description="Please check your inbox and click on the verification link to activate your account. The verification link will be active for 24 hours."
+        additionalInfo="If you do not see the email, please check your spam folder."
+      />
     </>
   );
 }

@@ -77,7 +77,8 @@ const VerifyEmailComp = ({ token }: Props) => {
       setTimeout(() => {
         setIsDialogOpen(false);
         setResendStatus("idle");
-      }, 2000);
+        setEmail("");
+      }, 4000);
     } catch (err) {
       setResendStatus("error");
       if (typeof err === "string") {

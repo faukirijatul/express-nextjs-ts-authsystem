@@ -6,10 +6,13 @@ import * as z from "zod";
 import Link from "next/link";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
-import { ResetPasswordModal } from "./reset-password-modal";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { forgotPassword } from "@/lib/store/features/auth/auth-slice";
+import {
+  closeResetPasswordModal,
+  forgotPassword,
+} from "@/lib/store/features/auth/auth-slice";
 import { useEffect } from "react";
+import { EmailSentModal } from "./email-sent-modal";
 
 // Validation schema for the forgot password form
 const forgotPasswordSchema = z.object({
@@ -20,7 +23,8 @@ type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>;
 
 export function ForgotPasswordForm() {
   const dispatch = useAppDispatch();
-  const { isLoading, error } = useAppSelector((state) => state.auth);
+  const { isLoading, error, isResetPasswordModalOpen, resetEmail } =
+    useAppSelector((state) => state.auth);
 
   const form = useForm<ForgotPasswordFormValues>({
     resolver: zodResolver(forgotPasswordSchema),
@@ -113,7 +117,15 @@ export function ForgotPasswordForm() {
           </div>
         </div>
       </div>
-      <ResetPasswordModal />
+
+      <EmailSentModal
+        isOpen={isResetPasswordModalOpen}
+        onClose={() => dispatch(closeResetPasswordModal())}
+        title="Password Reset Email Sent"
+        email={resetEmail}
+        description="Please check your inbox and follow the instructions in the email to reset your password."
+        additionalInfo="If you do not see the email, please check your spam folder."
+      />
     </>
   );
 }
