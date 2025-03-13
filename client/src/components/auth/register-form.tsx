@@ -9,10 +9,11 @@ import {
   closeVerificationModal,
   registerUser,
 } from "@/lib/store/features/auth/auth-slice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { EmailSentModal } from "./email-sent-modal";
+import GoogleLoginButton from "./google-login-button";
 
 // Validation schema matching the backend requirements
 const registerSchema = z.object({
@@ -31,9 +32,9 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export function RegisterForm() {
   const dispatch = useAppDispatch();
-  const { isLoading, error, user, isVerificationModalOpen } = useAppSelector(
-    (state) => state.auth
-  );
+  const { isLoading, error, registeringUser, isVerificationModalOpen } =
+    useAppSelector((state) => state.auth);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
@@ -53,6 +54,10 @@ export function RegisterForm() {
   async function onSubmit(data: RegisterFormValues) {
     await dispatch(registerUser(data));
   }
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
 
   return (
     <>
@@ -127,18 +132,31 @@ export function RegisterForm() {
               >
                 Password
               </label>
-              <input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 ${
-                  form.formState.errors.password
-                    ? "border-red-500"
-                    : "border-gray-300"
-                }`}
-                disabled={isLoading}
-                {...form.register("password")}
-              />
+              <div className="relative">
+                <input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 ${
+                    form.formState.errors.password
+                      ? "border-red-500"
+                      : "border-gray-300"
+                  }`}
+                  disabled={isLoading}
+                  {...form.register("password")}
+                />
+
+                {/* Toggle password visibility button */}
+                <button
+                  type="button"
+                  onClick={togglePasswordVisibility}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                  tabIndex={-1}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
               {form.formState.errors.password && (
                 <p className="text-sm text-red-500">
                   {form.formState.errors.password.message}
@@ -165,6 +183,8 @@ export function RegisterForm() {
                 "Create Account"
               )}
             </button>
+
+            <GoogleLoginButton />
           </form>
         </div>
 
@@ -186,7 +206,7 @@ export function RegisterForm() {
         isOpen={isVerificationModalOpen}
         onClose={() => dispatch(closeVerificationModal())}
         title="Email Verification Required"
-        email={user?.email}
+        email={registeringUser?.email}
         description="Please check your inbox and click on the verification link to activate your account. The verification link will be active for 24 hours."
         additionalInfo="If you do not see the email, please check your spam folder."
       />

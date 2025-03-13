@@ -60,7 +60,7 @@ export const sendVerificationNewEmail = async (
   email: string
 ): Promise<void> => {
   try {
-    const verificationLink = `${process.env.CLIENT_URL}/activate-account?token=${token}`;
+    const verificationLink = `${process.env.CLIENT_URL}/verify-new-email?token=${token}`;
 
     const htmlContent = mustache.render(verificationNewEmailTemplate, {
       name: user.name,
@@ -94,7 +94,7 @@ export const sendVerificationChangePasswordEmail = async (
   token: string
 ): Promise<void> => {
   try {
-    const verificationLink = `${process.env.CLIENT_URL}/activate-account?token=${token}`;
+    const verificationLink = `${process.env.CLIENT_URL}/verify-new-password?token=${token}`;
 
     const htmlContent = mustache.render(
       verificationChangePasswordEmailTemplate,

@@ -66,7 +66,7 @@ export const verifyNewEmailSchema = {
 
 export const updatePasswordSchema = {
   body: z.object({
-    password: commonValidations.password,
+    password: z.string().min(1, "Password is required"),
     newPassword: commonValidations.password,
   }),
 };

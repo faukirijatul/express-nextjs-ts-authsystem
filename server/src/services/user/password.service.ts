@@ -19,6 +19,9 @@ export const updatePasswordService = async (
     throw new AuthenticationError("Unauthorized");
   }
 
+  console.log(password, "password");
+  console.log(newPassword, "newPassword");
+
   const user = await prismaClient.user.findUnique({
     where: {
       id: reqUser.id,

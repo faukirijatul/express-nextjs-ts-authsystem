@@ -4,10 +4,11 @@ import * as z from "zod";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { loginUser } from "@/lib/store/features/auth/auth-slice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import GoogleLoginButton from "./google-login-button";
 
 const loginSchema = z.object({
   email: z.string().min(1, "Email is required").email("Invalid email format"),
@@ -20,6 +21,7 @@ export function LoginForm() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { isLoading, error } = useAppSelector((state) => state.auth);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -38,8 +40,12 @@ export function LoginForm() {
   async function onSubmit(data: LoginFormValues) {
     await dispatch(loginUser(data));
     toast.success("Login successful!");
-    router.push("/dashboard");
+    router.push("/");
   }
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
 
   return (
     <div className="bg-white rounded-md shadow-md overflow-hidden w-[450px]">
@@ -86,18 +92,31 @@ export function LoginForm() {
             >
               Password
             </label>
-            <input
-              id="password"
-              type="password"
-              placeholder="••••••••"
-              className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 ${
-                form.formState.errors.password
-                  ? "border-red-500"
-                  : "border-gray-300"
-              }`}
-              disabled={isLoading}
-              {...form.register("password")}
-            />
+            <div className="relative">
+              <input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="••••••••"
+                className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 ${
+                  form.formState.errors.password
+                    ? "border-red-500"
+                    : "border-gray-300"
+                }`}
+                disabled={isLoading}
+                {...form.register("password")}
+              />
+
+              {/* Toggle password visibility button */}
+              <button
+                type="button"
+                onClick={togglePasswordVisibility}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                tabIndex={-1}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
             {form.formState.errors.password && (
               <p className="text-sm text-red-500">
                 {form.formState.errors.password.message}
@@ -134,6 +153,8 @@ export function LoginForm() {
               "Login"
             )}
           </button>
+
+          <GoogleLoginButton />
         </form>
       </div>
 
