@@ -4,8 +4,7 @@
   "main": "src/index.ts",
   "scripts": {
     "test": "jest",
-    "vercel-build": "prisma generate && npm run build",
-    "build": "tsc",
+    "build": "prisma generate && tsc && cp -r prisma dist/",
     "start": "node dist/index.js",
     "dev": "ts-node-dev src/index.ts"
   },
