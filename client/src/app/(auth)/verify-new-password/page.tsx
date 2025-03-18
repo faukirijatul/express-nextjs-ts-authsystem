@@ -3,8 +3,26 @@
 import VerifyNewPasswordComp from "@/components/auth/verify-new-password";
 import { useSearchParams } from "next/navigation";
 import { Toaster } from "sonner";
+import { Suspense } from "react";
 
-export default function VerifyNewEmailPage() {
+export default function VerifyNewPasswordPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex flex-col items-center justify-center min-h-screen space-y-4">
+          <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
+          <p className="text-lg font-medium text-muted-foreground">
+            Loading...
+          </p>
+        </div>
+      }
+    >
+      <VerifyNewPasswordContent />
+    </Suspense>
+  );
+}
+
+function VerifyNewPasswordContent() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token") || "";
 

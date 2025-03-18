@@ -4,8 +4,26 @@ import { ResetPasswordForm } from "@/components/auth/reset-password-form";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { Toaster } from "sonner";
+import { Suspense } from "react";
 
 export default function ResetPasswordPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex flex-col items-center justify-center min-h-screen space-y-4">
+          <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
+          <p className="text-lg font-medium text-muted-foreground">
+            Loading...
+          </p>
+        </div>
+      }
+    >
+      <ResetPasswordContent />
+    </Suspense>
+  );
+}
+
+function ResetPasswordContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const token = searchParams.get("token");
