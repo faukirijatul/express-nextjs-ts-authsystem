@@ -1,4 +1,4 @@
-import { prismaClient } from "../../config/prisma-client";
+import prismaClient from "../../config/prisma-client";
 import { AuthenticationError } from "../../utils/error-handler";
 import bcrypt from "bcrypt";
 import jwt, { JwtPayload } from "jsonwebtoken";

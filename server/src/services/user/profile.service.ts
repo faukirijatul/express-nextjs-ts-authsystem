@@ -1,5 +1,5 @@
 import { deleteImage, uploadImage } from "../../config/cloudinary";
-import { prismaClient } from "../../config/prisma-client";
+import prismaClient from "../../config/prisma-client";
 import { sendVerificationNewEmail } from "../../email/email-service";
 import {
   AuthenticationError,

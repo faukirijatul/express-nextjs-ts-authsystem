@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { asyncHandler, AuthenticationError } from "../utils/error-handler";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { prismaClient } from "../config/prisma-client";
+import prismaClient from "../config/prisma-client";
 import { setCookie } from "../services/cookie.service";
 
 export const authenticateUser = asyncHandler(

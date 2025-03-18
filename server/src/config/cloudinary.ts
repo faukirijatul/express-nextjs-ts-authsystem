@@ -1,6 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
 import "dotenv/config";
-import { prismaClient } from "./prisma-client";
+import prismaClient from "./prisma-client";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,

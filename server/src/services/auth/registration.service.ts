@@ -1,4 +1,4 @@
-import { prismaClient } from "../../config/prisma-client";
+import prismaClient from "../../config/prisma-client";
 import { sendVerificationEmail } from "../../email/email-service";
 import { ConflictError, NotFoundError } from "../../utils/error-handler";
 import bcrypt from "bcrypt";
@@ -67,7 +67,6 @@ export const resendVerificationTokenService = async (email: string) => {
   return { user: { ...user, password: null } };
 };
 
-
 // 3. Verify email service
 export const verifyUserEmailService = async (token: string) => {
   const payload = jwt.verify(
@@ -76,7 +75,7 @@ export const verifyUserEmailService = async (token: string) => {
   ) as JwtPayload;
 
   const user = await prismaClient.user.findUnique({
-    where: { id: payload.userId }
+    where: { id: payload.userId },
   });
 
   if (!user) {

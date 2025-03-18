@@ -1,6 +1,6 @@
 import { Request } from "express";
 import { AuthenticationError } from "../../utils/error-handler";
-import { prismaClient } from "../../config/prisma-client";
+import prismaClient from "../../config/prisma-client";
 import bcrypt from "bcrypt";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import {

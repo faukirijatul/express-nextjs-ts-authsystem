@@ -1,3 +1,4 @@
+// Interface untuk data email
 export interface EmailData {
   from: string;
   to: string;
@@ -5,8 +6,9 @@ export interface EmailData {
   html: string;
 }
 
-// Extend the Request type to include user
+// Extend tipe global
 declare global {
+  // Extend namespace Express
   namespace Express {
     interface Request {
       user?: {
@@ -45,4 +47,7 @@ declare global {
       }
     }
   }
+
+  // Deklarasi untuk Prisma Client
+  var prisma: import("@prisma/client").PrismaClient | undefined;
 }

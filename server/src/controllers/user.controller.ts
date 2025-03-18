@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { prismaClient } from "../config/prisma-client";
+import prismaClient from "../config/prisma-client";
 import { asyncHandler, AuthenticationError } from "../utils/error-handler";
 import { clearCookie } from "../services/cookie.service";
 import { deleteImage } from "../config/cloudinary";
