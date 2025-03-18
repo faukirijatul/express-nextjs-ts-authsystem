@@ -3,6 +3,7 @@ import mustache from "mustache";
 import { EmailData } from "../types/types";
 import fs from "fs";
 import "dotenv/config";
+import path from "path";
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
@@ -16,7 +17,7 @@ const transporter = nodemailer.createTransport({
 
 // 1. Verify Email In Register
 const verificationEmailTemplate = fs.readFileSync(
-  "./src/email/templates/verify-email.html",
+  path.join(__dirname, "templates", "verify-email.html"),
   "utf-8"
 );
 
@@ -50,7 +51,7 @@ export const sendVerificationEmail = async (
 
 // 2. Verify Email in Update Profile
 const verificationNewEmailTemplate = fs.readFileSync(
-  "./src/email/templates/verify-new-email.html",
+  path.join(__dirname, "templates", "verify-new-email.html"),
   "utf-8"
 );
 
@@ -85,7 +86,7 @@ export const sendVerificationNewEmail = async (
 
 // 3. Change Password Verify
 const verificationChangePasswordEmailTemplate = fs.readFileSync(
-  "./src/email/templates/verify-new-password.html",
+  path.join(__dirname, "templates", "verify-new-password.html"),
   "utf-8"
 );
 
@@ -122,7 +123,7 @@ export const sendVerificationChangePasswordEmail = async (
 
 // 4. Reset Password Verify
 const verificationResetPasswordEmailTemplate = fs.readFileSync(
-  "./src/email/templates/verify-reset-password.html",
+  path.join(__dirname, "templates", "verify-reset-password.html"),
   "utf-8"
 );
 
